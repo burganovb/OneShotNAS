@@ -20,7 +20,7 @@ def main():
 
     # 1. Train SuperNet and evaluate top-1 accuracy of sampled nets
 
-    top1_oneshot_ = np.array(train_supernet_mnist(SuperNet(),
+    top1_oneshot_ = np.array(train_supernet_mnist(SuperNet(conv1channels=8, conv2channels=8, hidden=32),
                                                   training_settings))
     with open('top1_oneshot_.pickle', 'wb') as handle:
         pickle.dump(top1_oneshot_, handle)
@@ -39,7 +39,8 @@ def main():
     top1_standalone = []
     training_settings['epochs'] = 14
     for k, subnet in enumerate([[0, 0], [1, 0], [0, 1], [1, 1]]):
-        top1_standalone.append(train_supernet_mnist(SuperNet(), training_settings, subnet=subnet))
+        top1_standalone.append(train_supernet_mnist(SuperNet(conv1channels=8, conv2channels=8, hidden=32),
+                                                    training_settings, subnet=subnet))
     top1_standalone_ = np.array(top1_standalone)
     with open('top1_standalone_.pickle', 'wb') as handle:
         pickle.dump(top1_standalone_, handle)

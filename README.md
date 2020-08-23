@@ -64,14 +64,16 @@ Next, each of the four subnets is trained separately:
 
 ![A: Stand-alone top-1 accuracy](figures/top1_standalone_SuperNetSum.png "A: Stand-alone top-1 accuracy")
 
-Is one-shot performance predictive of the intrinsic performance after convergence. We plot one against the other:
+Is one-shot performance predictive of the intrinsic performance after convergence? We plot one against the other (after the last training epoch):
 
 ![A: Stand-alone vs one-shot](figures/oneshot_v_standalone_SuperNetSum.png "A: Stand-alone vs one-shot")
 
-There is strong corelation, and the ranking of the architectures is predicted correctly.
-Generally stand-alone training yields a better performance than one-shot training as expected. The only exception is the [0,0] subnet.sharing
+There is strong correlation, and the ranking of the architectures is predicted correctly.
+Generally, stand-alone training yields a better performance than one-shot training as expected. The only exception is the [0,0] subnet.
 
 The same experiment is repeated for `SuperNetConcat`:
+
+![B: summary](figures/summary_SuperNetConcat.png "B: summary")
 
 
 ### Outlook
