@@ -79,7 +79,7 @@ The same experiment is repeated for `SuperNetConcat`:
 ### Outlook
 
 One of the most intriguing observations in
-[[Bender2018](http://proceedings.mlr.press/v80/bender18a/bender18a.pdf)] paper is that symmetrized KL divergence between predictions of a subnet and the reference network
+[[Bender2018](http://proceedings.mlr.press/v80/bender18a/bender18a.pdf)] is that symmetrized KL divergence between predictions of a subnet and the reference network
 on a training set strongly correlates to the subnet performance on the test set.
 It might be worth looking if this is a more general phenomenon and KL divergence is a fundamental way of measuring distance between architectures.
 
