@@ -92,11 +92,16 @@ def train_supernet_mnist(nnet, training_settings, subnet=None, test_all=False):
 
     test_acc = []
 
+    if subnet is None:
+        print("\nTraining SuperNet\n")
+    else:
+        print("\nTraining subnet {}\n".format(subnet))
+
     for epoch in range(1, epochs + 1):
         train(model, device, train_loader, optimizer, epoch, log_interval, F.nll_loss, subnet)
 
         test_acc_ = []
-        if subnet == None or test_all:
+        if subnet is None or test_all:
             for choice in [[0, 0], [1, 0], [0, 1], [1, 1]]:
                 model.set_subnet(choice)
                 test_acc_.append(test(model, device, test_loader, F.nll_loss))

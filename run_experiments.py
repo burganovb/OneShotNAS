@@ -1,77 +1,64 @@
-import torch
-from torchvision import datasets, transforms
-from torch.optim.lr_scheduler import StepLR
+import numpy as np
+import matplotlib.pyplot as plt
 from supernet.model import SuperNet
-from supernet.train import train, test
+from supernet.train import train_supernet_mnist
+import pickle
 
 
 def main():
     # Training settings
-    seed = 1
-    batch_size = 64
-    test_batch_size = 1000
-    epochs = 14
-    lr = 1.0
-    gamma = 0.7
-    no_cuda = True
-    dry_run = False
-    log_interval = 50
-    save_model = False
-    model = SuperNet()
+    training_settings = {'seed': 1,
+                         'batch_size': 64,
+                         'test_batch_size': 1000,
+                         'epochs': 14,
+                         'learning_rate': 1.0,
+                         'gamma': 0.7,
+                         'no_cuda': True,
+                         'log_interval': 50,
+                         'save_model': True
+                         }
 
-    use_cuda = not no_cuda and torch.cuda.is_available()
+    # 1. Train SuperNet and evaluate top-1 accuracy of sampled nets
 
-    torch.manual_seed(seed)
+    top1_oneshot_ = np.array(train_supernet_mnist(SuperNet(), training_settings))
+    with open('top1_oneshot_.pickle', 'wb') as handle:
+        pickle.dump(top1_oneshot_, handle)
 
-    device = torch.device("cuda" if use_cuda else "cpu")
+    fig, ax = plt.subplots()
+    ax.plot(top1_oneshot_, '-s')
+    ax.grid()
+    ax.legend([[0, 0], [1, 0], [0, 1], [1, 1]])
+    plt.title('One-shot SuperNet training')
+    plt.xlabel('Epoch')
+    plt.ylabel('Top-1 accuracy on test set')
+    fig.savefig('figures/top1_oneshot_.png')
+    plt.show()
 
-    kwargs = {'batch_size': batch_size}
-    if use_cuda:
-        kwargs.update({'num_workers': 1,
-                       'pin_memory': True,
-                       'shuffle': True},
-                      )
+    # 2. Train stand-alone subnets from scratch
+    top1_standalone = []
+    training_settings['epochs'] = 14
+    for k, subnet in enumerate([[0, 0], [1, 0], [0, 1], [1, 1]]):
+        top1_standalone.append(train_supernet_mnist(SuperNet(), training_settings, subnet=subnet))
+    top1_standalone_ = np.array(top1_standalone)
+    with open('top1_standalone_.pickle', 'wb') as handle:
+        pickle.dump(top1_standalone_, handle)
 
-    transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
-    dataset1 = datasets.MNIST('../data', train=True, download=True,
-                              transform=transform)
-    dataset2 = datasets.MNIST('../data', train=False,
-                              transform=transform)
-    train_loader = torch.utils.data.DataLoader(dataset1, **kwargs)
-    test_loader = torch.utils.data.DataLoader(dataset2, **kwargs)
+    fig, ax = plt.subplots()
+    ax.plot(top1_standalone_.T, '-s')
+    ax.grid()
+    ax.legend([[0, 0], [1, 0], [0, 1], [1, 1]])
+    plt.title('Stand-alone model training')
+    plt.xlabel('Epoch')
+    plt.ylabel('Top-1 accuracy on test set')
+    plt.show()
 
-    model = model.to(device)
-    optimizer = optim.Adadelta(model.parameters(), lr=lr)
-
-    scheduler = StepLR(optimizer, step_size=1, gamma=gamma)
-
-    test_acc = []
-
-    if subnet is not None:
-        model.set_choice(subnet)
-
-    for epoch in range(1, epochs + 1):
-        train_super(model, device, train_loader, optimizer, epoch, log_interval, dry_run, subnet)
-
-        test_acc_ = []
-        if subnet == None:
-            for choice in [[0, 0], [1, 0], [0, 1], [1, 1]]:
-                model.set_choice(choice)
-                test_acc_.append(test_super(model, device, test_loader))
-            test_acc.append(test_acc_)
-        else:
-            model.set_choice(subnet)
-            test_acc.append(test_super(model, device, test_loader))
-
-        scheduler.step()
-
-    if save_model:
-        torch.save(model.state_dict(), "mnist_supernet.pt")
-
-    return test_acc
+    fig, ax = plt.subplots()
+    ax.plot(top1_oneshot_[-1, :], top1_standalone_.T[-1, :], 'o')
+    ax.grid()
+    plt.xlabel('One-shot model accuracy')
+    plt.ylabel('Stand-alone model accuracy')
+    fig.savefig('figures/oneshot_v_standalone_.png')
+    plt.show()
 
 
 if __name__ == '__main__':
