@@ -32,8 +32,7 @@ In this case, weights of the following layer are fully shared.
 (C) The outputs of the alternative conv layers are concatenated and passed on to the next layer.
 The size of the output data tensor depends in this case on the nuumber of alternative conv elements, and the weights of the next layer are not fully shared.
 
-We use approach (A) for the first block and (C) for the second one. In general, however, approach (C) does not seem to be a good one if the number of alternative conv elements is large.
-We then repeat some experiment for approaches (A) and (B).
+We use approaches (A) and (B). The approach (C) does not seem to be a good one if the number of alternative conv elements is large.
 
 Weight sharing is implemented in the `forward()` method of SuperNet as follows. For (A):
 
@@ -54,3 +53,18 @@ Then `backward()` pass + `optimizer.step()` correctly update the weights of only
 This implementation does not require any parameter/weight copying during training.
 
 ### Results
+
+The SuperNet is trained and after each epoch the top-1 accuracy on a test set is evaluated for each of the four subnets:
+
+![A: One-shot top-1 accuracy](figures/top1_oneshot_SuperNetSum.png "A: One-shot top-1 accuracy")
+
+Next, each of the four subnets is trained separately:
+
+![A: Stand-alone top-1 accuracy](figures/top1_standalone_SuperNetSum.png "A: Stand-alone top-1 accuracy")
+
+Is one-shot performance predictive of the intrinsic performance after convergence? We plot one against the other:
+
+
+
+
+
