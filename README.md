@@ -54,15 +54,30 @@ This implementation does not require any parameter/weight copying during trainin
 
 ### Results
 
-One-shot training of SuperNet is performed and after each epoch top-1 accuracy on a test set is evaluated for each of the four subnets:
+One-shot training of SuperNet (`SuperNetSum`) is performed and after each epoch top-1 accuracy on a test set is evaluated for each of the four subnets:
+
 ![A: One-shot top-1 accuracy](figures/top1_oneshot_SuperNetSum.png "A: One-shot top-1 accuracy")
 
+The subnets or architectures are labelled as [x y], where x/y indicates switching on 3x3 layer (0) or 5x5 layer (1) inside the first/second block in the network.
+
 Next, each of the four subnets is trained separately:
+
 ![A: Stand-alone top-1 accuracy](figures/top1_standalone_SuperNetSum.png "A: Stand-alone top-1 accuracy")
 
 Is one-shot performance predictive of the intrinsic performance after convergence. We plot one against the other:
+
 ![A: Stand-alone vs one-shot](figures/oneshot_v_standalone_SuperNetSum.png "A: Stand-alone vs one-shot")
 
+There is strong corelation, and the ranking of the architectures is predicted correctly.
+Generally stand-alone training yields a better performance than one-shot training as expected. The only exception is the [0,0] subnet.sharing
+
+The same experiment is repeated for `SuperNetConcat`:
 
 
+### Outlook
+
+One of the most intriguing observations in
+[[Bender2018](http://proceedings.mlr.press/v80/bender18a/bender18a.pdf)] paper is that symmetrized KL divergence between predictions of a subnet and the reference network
+on a training set strongly correlates to the subnet performance on the test set.
+It might be worth looking if this is a more general phenomenon and KL divergence is a fundamental way of measuring distance between architectures.
 
