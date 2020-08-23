@@ -44,7 +44,9 @@ x = torch.cat((self.conv11(x)*(1-self.choice), self.conv12(x)*self.choice), dim=
 x = self.conv1_1x1(x)
 ```
 
-Parameter `choice` controls which convolution is switched on. This simple approach works, because the computational graph is built during a forward pass, which is called at every iteration (for every minibatch). The backward pass + optimizer step update the weights correctly.
-This seems to be a simple and effective implementation that does not require and parameter copying on the fly.
+Parameter `choice` controls which convolution is switched on.
+This simple approach works, because the computational graph is built during a forward pass, which is called at every iteration (for every minibatch).
+Then backward pass + optimizer step update the weights correctly.
+This implementation does not require any parameter/weight copying during training.
 
 ### Results
