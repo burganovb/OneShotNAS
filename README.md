@@ -31,20 +31,20 @@ In this case, weights of the following layer are fully shared.
 
 (C) The outputs of the alternative conv layers are concatenated and passed on to the next layer. The size of the data tensor depends in this case on the nuumber of alternative conv elements, and the weights of the next layer are not fully shared.
 
-We use approach (A), and then repeat some experiment for (B). In the code, weight sharing is implemented in the 'forward()' method of the SuperNet as follows. For (A):
+We use approach (A), and then repeat some experiment for (B). In the code, weight sharing is implemented in the `forward()` method of the SuperNet as follows. For (A):
 
-'''
+```
 x = self.conv1(x) * (1 - self.choice) + self.conv2(x) * self.choice
-'''
+```
 
 And for (B):
 
-'''
+```
 x = torch.cat((self.conv11(x)*(1-self.choice), self.conv12(x)*self.choice), dim=1)
 x = self.conv1_1x1(x)
-'''
+```
 
-Parameter 'choice' controls which convolution is switched on. This simple approach works, because the computational graph is built during a forward pass, which is called at every iteration (for every minibatch). The backward pass + optimizer step update the weights correctly.
-This seems to be a simple and effective implementation that does not require and parameter copying on the fly.implement
+Parameter `choice` controls which convolution is switched on. This simple approach works, because the computational graph is built during a forward pass, which is called at every iteration (for every minibatch). The backward pass + optimizer step update the weights correctly.
+This seems to be a simple and effective implementation that does not require and parameter copying on the fly.
 
 ### Results
