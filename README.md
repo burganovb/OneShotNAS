@@ -20,7 +20,7 @@ Here, we implement a simple SuperNet, that contains four subnets, and train it o
 - The DNN's are implemented using PyTorch library, we use Adadelta optimizer
 - We deliberately use a small number of filters for conv layers (16) to be able to see differences between architectures
 - During one-shot training a subnet is sampled randomly at each iteration (for each minibatch) and only its weights are updated
-- There seem to be several ways to combine the subnets into a SuperNet, shown below:
+- There seem to be several ways to implement weight-sharing, shown below:
 
 ![Weight sharing](figures/weight_sharing.png "Weight sharing")
 
@@ -29,9 +29,11 @@ In this case, weights of the following layer are fully shared.
 
 (B) The outputs of the alternative conv layers are concatenated followed by 1x1 conv to reduce the size of the data tensor.
 
-(C) The outputs of the alternative conv layers are concatenated and passed on to the next layer. The size of the data tensor depends in this case on the nuumber of alternative conv elements, and the weights of the next layer are not fully shared.
+(C) The outputs of the alternative conv layers are concatenated and passed on to the next layer.
+The size of the output data tensor depends in this case on the nuumber of alternative conv elements, and the weights of the next layer are not fully shared.
 
-We use approach (A), and then repeat some experiment for (B). In the code, weight sharing is implemented in the `forward()` method of the SuperNet as follows. For (A):
+We use approach (A) for the first block and (C) for the second one. In general, however, approach (C) does not seem to be a good one if the number of alternative conv elements is large.
+We then repeat some experiment for approaches (A) and (B). In the code, weight sharing is implemented in the `forward()` method of the SuperNet as follows. For (A):
 
 ```
 x = self.conv1(x) * (1 - self.choice) + self.conv2(x) * self.choice
