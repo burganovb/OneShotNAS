@@ -20,7 +20,8 @@ def main():
 
     # 1. Train SuperNet and evaluate top-1 accuracy of sampled nets
 
-    top1_oneshot_ = np.array(train_supernet_mnist(SuperNet(), training_settings))
+    top1_oneshot_ = np.array(train_supernet_mnist(SuperNet(),
+                                                  training_settings))
     with open('top1_oneshot_.pickle', 'wb') as handle:
         pickle.dump(top1_oneshot_, handle)
 

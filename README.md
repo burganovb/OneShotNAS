@@ -54,16 +54,14 @@ This implementation does not require any parameter/weight copying during trainin
 
 ### Results
 
-The SuperNet is trained and after each epoch the top-1 accuracy on a test set is evaluated for each of the four subnets:
-
+One-shot training of SuperNet is performed and after each epoch top-1 accuracy on a test set is evaluated for each of the four subnets:
 ![A: One-shot top-1 accuracy](figures/top1_oneshot_SuperNetSum.png "A: One-shot top-1 accuracy")
 
 Next, each of the four subnets is trained separately:
-
 ![A: Stand-alone top-1 accuracy](figures/top1_standalone_SuperNetSum.png "A: Stand-alone top-1 accuracy")
 
-Is one-shot performance predictive of the intrinsic performance after convergence? We plot one against the other:
-
+Is one-shot performance predictive of the intrinsic performance after convergence. We plot one against the other:
+![A: Stand-alone vs one-shot](figures/oneshot_v_standalone_SuperNetSum.png "A: Stand-alone vs one-shot")
 
 
 
