@@ -1,5 +1,5 @@
 ## Goal
-Train a SuperNet that contains 4 architectures/subnets on MNIST dataset. The architectures are shown below:
+Train a SuperNet that contains 4 architectures/subnets on MNIST dataset.
 
 ![SuperNet architecture](figures/super_network.png "SuperNet architecture")
 
