@@ -1,6 +1,5 @@
-# Цель
-Обучить суперсеть, включающую в себя 4 сети, на датасете MNIST. Ниже показана архитектура SuperNet, которая покрывает пространство, состоящее из 4-х архитектур (на картинке справа).
-Свертки не меняют высоту и ширину входного тензора.
+## Goal
+Train a SuperNet that contains 4 architectures/subnets on MNIST dataset. The architectures are shown below:
 
 ![SuperNet architecture](figures/super_network.png "SuperNet architecture")
 
